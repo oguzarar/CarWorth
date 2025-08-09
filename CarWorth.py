@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import random
+import re
+import pandas as pd
 
 iller = [
     "adana", "adiyaman", "afyonkarahisar", "agri", "amasya", "ankara", "antalya", "artvin",
@@ -35,7 +37,7 @@ def post_url(url):
 def url(sehir,page):
     return f"https://www.arabam.com/ikinci-el/otomobil-{sehir}?view=List&page={page}"
 
-sehir=post_url(url("corum","1"))
+sehir=post_url(url("ankara","1"))
 for i in sehir:
     table=sehir.find("table","table listing-table w100")
     links=table.find_all("tr","listing-list-item should-hover bg-white")
@@ -45,5 +47,25 @@ for i in sehir:
         son=post_url(link2)
         baslik=son.find("div","product-name-container")
         print(baslik.text.strip())
-        break
-    break
+        konum=son.find("span","product-location")
+        print(konum.text.strip())
+        fiyat=son.find("div","desktop-information-price")
+        print(fiyat.text.strip())
+        details=son.find("div","product-properties-details linear-gradient")
+        all_details=details.find_all("div","property-item")
+        for i in all_details[1:]:
+            ilan=i.find("div","property-key")
+            ilan_tarih=i.find("div","property-value")
+            print(f"{ilan.text.strip()}: {ilan_tarih.text.strip()}")
+        aciklama=son.find("div","tab-content-wrapper tab-description")
+
+        pattern = r'(tramer(?:\skaydı)?|hasar(?:\skaydı)?)\s*[:\-]?\s*([\d.,]+)'
+
+        matches = re.findall(pattern, aciklama.text, re.IGNORECASE | re.DOTALL)
+
+        for label, fiyat_str in matches:
+            fiyat = int(fiyat_str.replace('.', '').replace(',', ''))
+            print(f"{label.lower()}: {fiyat}")
+
+
+
