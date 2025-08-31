@@ -25,18 +25,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.carworth.R
 import com.example.carworth.ui.theme.MainColor
 import com.example.carworth.ui.theme.backgroundColor
 import com.example.carworth.uix.view.fonk.VSpacers
 
 
-@Preview(showBackground = true)
+
 
 
 @Composable
 
-fun Anasayfa(){
+fun Anasayfa(navController: NavController){
     Scaffold {paddingValues ->
         Column(modifier = Modifier
             .fillMaxSize()
@@ -83,7 +84,9 @@ fun Anasayfa(){
                 contentDescription = "",
                 modifier = Modifier.size(200.dp))
             VSpacers(132)
-            Button(onClick = {},
+            Button(onClick = {
+                navController.navigate("sorusayfasi")
+            },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MainColor,

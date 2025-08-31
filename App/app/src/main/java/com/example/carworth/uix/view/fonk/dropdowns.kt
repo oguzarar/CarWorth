@@ -3,6 +3,7 @@ package com.example.carworth.uix.view.fonk
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -26,16 +31,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.carworth.R
+import kotlin.collections.forEachIndexed
 
 
 @Composable
 
-fun Dropdowns(baslik: String,placeholder: String){
+fun <T> Dropdowns(baslik: String,placeholder: String,list: List<T>,
+                  onItemSelected: (String) -> Unit){
+    val aciliskontrol=remember { mutableStateOf(false) }
+    var placetext=remember{mutableStateOf(placeholder)}
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 24.dp) // üst boşluk
+            .padding(top = 24.dp)
     ) {
         Text(
             text = baslik,
@@ -44,10 +53,11 @@ fun Dropdowns(baslik: String,placeholder: String){
         VSpacers(24)
         Box(
             modifier = Modifier
-                .size(width = 195.dp, height = 45.dp)
+                .size(width = 175.dp, height = 45.dp)
                 .shadow(25.dp, shape = RoundedCornerShape(10.dp))
                 .background(Color.White, shape = RoundedCornerShape(10.dp))
-                .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp)),
+                .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp))
+                .clickable { aciliskontrol.value = true },
             contentAlignment = Alignment.Center
         ) {
             Row(
@@ -57,12 +67,27 @@ fun Dropdowns(baslik: String,placeholder: String){
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = placeholder, color = Color.Gray)
+                Text(text = placetext.value, color = Color.Gray)
                 Image(
                     painter = painterResource(R.drawable.dropdownitem),
                     contentDescription = "",
                     modifier = Modifier.size(18.dp)
                 )
+            }
+            DropdownMenu(expanded=aciliskontrol.value,onDismissRequest = {aciliskontrol.value=false},
+                modifier = Modifier
+                    .size(175.dp,200.dp)
+                    .background(Color.White, shape = RoundedCornerShape(10.dp))
+                    .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp))){
+                list.forEachIndexed {
+                    index,string ->
+                    DropdownMenuItem(text = {Text(text = string.toString())},
+                        onClick = {
+                            placetext.value=string.toString()
+                            aciliskontrol.value=false
+                            onItemSelected(string.toString())
+                        })
+                }
             }
         }
     }

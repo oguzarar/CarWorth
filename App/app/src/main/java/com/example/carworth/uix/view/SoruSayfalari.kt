@@ -1,5 +1,6 @@
 package com.example.carworth.uix.view
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,19 +37,44 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.carworth.R
 import com.example.carworth.ui.theme.MainColor
 import com.example.carworth.ui.theme.backgroundColor
+import com.example.carworth.uix.view.fonk.Araba
 import com.example.carworth.uix.view.fonk.Dropdowns
+import com.example.carworth.uix.view.fonk.Listeler
+import com.example.carworth.uix.view.fonk.Textfields
 import com.example.carworth.uix.view.fonk.VSpacers
+import com.example.carworth.uix.view.fonk.sendAraba
+import com.google.gson.Gson
 
-@Preview(showBackground = true)
 
 
 @Composable
 
-fun SoruSayfalari(){
+fun SoruSayfalari(navController: NavController){
     val currentquest= remember{ mutableStateOf(0) }
+    val secilenSehir=remember{mutableStateOf("")}
+    val secilenMarka=remember{mutableStateOf("")}
+    val secilenSeri=remember{mutableStateOf("")}
+    val secilenModel=remember{mutableStateOf("")}
+    val secilenYil=remember{mutableStateOf("")}
+    val girilenKM=remember{mutableStateOf(0)}
+    val secilenVitesTipi=remember{mutableStateOf("")}
+    val secilenYakitTipi=remember{mutableStateOf("")}
+    val secilenKasaTipi=remember{mutableStateOf("")}
+    val secilenrenk=remember{mutableStateOf("")}
+    val girilenMotorHacmi=remember{mutableStateOf(0.0)}
+    val girilenMotorGucu=remember{mutableStateOf(0.0)}
+    val secilenCekis=remember{mutableStateOf("")}
+    val girilenOrtYakit=remember{mutableStateOf(0.0)}
+    val girilenYakitDepo=remember{mutableStateOf(0.0)}
+    val girilenTramer=remember{mutableStateOf(0.0)}
+    val secilenBoya=remember{mutableStateOf("")}
+    val secilenDegisen=remember{mutableStateOf("")}
+
+
     Scaffold {paddingValues ->
         Column(modifier = Modifier
             .fillMaxSize()
@@ -73,52 +99,87 @@ fun SoruSayfalari(){
                                 modifier = Modifier
                                     .padding(start = 15.dp, top = 15.dp)
                                     .size(32.dp)
-                                    .clickable{
-                                        if(currentquest.value>0){
+                                    .clickable {
+                                        if (currentquest.value > 0) {
                                             currentquest.value--
                                         }
-
                                     })
                             Column() {
                                 when(currentquest.value){
                                     0-> {
-                                        Dropdowns("Şehir Seçiniz","Şehir Seçiniz")
+                                        Dropdowns("Şehir Seçiniz","Şehir Seçiniz", Listeler().sehirList, onItemSelected = {secilen->secilenSehir.value=secilen})
                                     }
                                     1-> {
-                                        Dropdowns("Marka","Marka Seçiniz")
-                                        Dropdowns("Seri","Seri Seçiniz")
-                                        Dropdowns("Model","Model Seçiniz")
-                                        Dropdowns("Yıl","Yıl Seçiniz")
+                                        Dropdowns("Marka","Marka Seçiniz", Listeler().arabaMarkalari, onItemSelected = {secilen->secilenMarka.value=secilen})
+                                        Dropdowns("Seri","Seri Seçiniz",Listeler().arabaModel[secilenMarka.value]?:emptyList(), onItemSelected = {secilen->secilenModel.value=secilen})
+                                        Dropdowns("Model","Model Seçiniz",Listeler().arabaSeri[secilenModel.value]?:emptyList(), onItemSelected = {secilen->secilenSeri.value=secilen})
+
                                     }
                                     2-> {
-                                        Dropdowns("Kilometre Seçiniz","Kilometre Seçiniz")
+                                        Dropdowns("Yıl","Yıl Seçiniz",Listeler().yil, onItemSelected = {secilen->secilenYil.value=secilen})
+                                        Textfields("Kilometre Giriniz","Kilometre Giriniz",
+                                            { deger -> girilenKM.value = deger.toInt() })
+                                        Dropdowns("Renk","Renk Seçiniz",Listeler().renk, onItemSelected = {secilen->secilenrenk.value=secilen})
                                     }
                                     3-> {
-                                        Dropdowns("Vites Tipi","Vites Tipi Seçiniz")
-                                        Dropdowns("Yakıt Tipi","Yakıt Tipi Seçiniz")
-                                        Dropdowns("Kasa Tipi","Kasa Tipi Seçiniz")
+                                        Dropdowns("Vites Tipi","Vites Tipi Seçiniz",Listeler().vites_tipi, onItemSelected = {secilen->secilenVitesTipi.value=secilen})
+                                        Dropdowns("Yakıt Tipi","Yakıt Tipi Seçiniz",Listeler().yakit_tipi, onItemSelected = {secilen->secilenYakitTipi.value=secilen})
+                                        Dropdowns("Kasa Tipi","Kasa Tipi Seçiniz",Listeler().kasa_tipi, onItemSelected = {secilen->secilenKasaTipi.value=secilen})
+
                                     }
                                     4-> {
-                                        Dropdowns("Motor Hacmi","Motor Hacmi Seçiniz")
-                                        Dropdowns("Motor Gücü","Motor Gücü Seçiniz")
-                                        Dropdowns("Çekiş","Çekiş Tipi Seçiniz")
+                                        Textfields("Motor Hacmi","Motor Hacmi",{ deger -> girilenMotorHacmi.value = deger.toDouble() })
+                                        Textfields("Motor Gücü","Motor Gücü",{ deger -> girilenMotorGucu.value = deger.toDouble() })
+                                        Dropdowns("Çekiş","Çekiş Tipi Seçiniz",Listeler().cekis, onItemSelected = {secilen->secilenCekis.value=secilen})
                                     }
                                     5-> {
-                                        Dropdowns("Ort. Yakıt Tüketimi","Ort. Yakıt Tüketimi")
-                                        Dropdowns("Yakıt Deposu","Yakıt Deposu")
+                                        Textfields("Ort. Yakıt Tüketimi","Ort. Yakıt Tüketimi",{ deger -> girilenOrtYakit.value = deger.toDouble() })
+                                        Textfields("Yakıt Deposu","Yakıt Deposu",{ deger -> girilenYakitDepo.value = deger.toDouble() })
                                     }
                                     6-> {
-                                        Dropdowns("Boya Değişen","Boya Değişen")
-                                        Dropdowns("Tramer","Tramer")
+                                        Dropdowns("Boya","Boya",Listeler().boyaDegisen, onItemSelected = {secilen->secilenBoya.value=secilen})
+                                        Dropdowns("Değişen","Değişen",Listeler().boyaDegisen, onItemSelected = {secilen->secilenDegisen.value=secilen})
+                                        Textfields("Tramer","Tramer",{ deger -> girilenTramer.value = deger.toDouble() })
+                                    }
+                                    7->{
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(top = 24.dp)) {
+                                            Text(
+                                                text = "Tahmini Fİyat",
+                                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                                            )
+                                            val araba= Araba(
+                                                secilenSehir.value,
+                                                secilenMarka.value,
+                                                secilenSeri.value,
+                                                secilenModel.value,
+                                                secilenYil.value.toInt(),
+                                                girilenKM.value,
+                                                secilenrenk.value,
+                                                secilenVitesTipi.value,
+                                                secilenYakitTipi.value,
+                                                secilenKasaTipi.value,
+                                                girilenMotorHacmi.value,
+                                                girilenMotorGucu.value,
+                                                secilenCekis.value,
+                                                girilenOrtYakit.value,
+                                                girilenYakitDepo.value,
+                                                secilenBoya.value,
+                                                secilenDegisen.value,
+                                                girilenTramer.value)
+                                            val gson= Gson()
+                                            val CarInfo=gson.toJson(araba)
+                                        }
                                     }
                                 }
-
                             }
-
                         }
                         Button(
                             onClick = {
-                                if(currentquest.value<6){
+                                if(currentquest.value<7){
                                     currentquest.value++
                                 }
                                       },

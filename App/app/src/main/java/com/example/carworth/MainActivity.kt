@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.carworth.ui.theme.CarWorthTheme
+import com.example.carworth.uix.view.SayfaGecisi
 import com.example.carworth.uix.view.SoruSayfalari
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SoruSayfalari()
+            SayfaGecisi("anasayfa")
 
         }
     }
