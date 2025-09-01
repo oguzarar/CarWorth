@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.10"
 }
 
 android {
@@ -56,10 +57,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("com.google.code.gson:gson:2.13.1")
-    implementation("io.ktor:ktor-client-core:3.2.3")
-    implementation("io.ktor:ktor-client-cio:3.2.3")
-    implementation("io.ktor:ktor-client-content-negotiation:3.2.3")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:3.2.3")
-    implementation("androidx.navigation:navigation-compose:2.9.3")
+    implementation(libs.gson)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.androidx.navigation.compose)
+
+
+
 }

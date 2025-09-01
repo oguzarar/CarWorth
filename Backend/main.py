@@ -23,6 +23,13 @@ class Araba(BaseModel):
     degisen: int
     tramer: float
 
+def yuvarla(sayi: int):
+    uzunluk = len(str(sayi))
+    if uzunluk <= 3:
+        return sayi
+    son = 10 ** (uzunluk - 3)
+    return (sayi // son) * son
+
 app = FastAPI()
 model = CatBoostRegressor()
 model.load_model("araba_fiyat_model.cbm")
@@ -52,5 +59,6 @@ async def araba_ekle(araba: Araba):
     }])
 
     sonuc = model.predict(data)
-    return {"fiyat": float(sonuc[0])}
+    fiyat=yuvarla(int(sonuc[0]))
+    return fiyat
 

@@ -1,16 +1,10 @@
 package com.example.carworth.uix.view
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,9 +17,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -34,8 +28,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -46,23 +38,22 @@ import com.example.carworth.uix.view.fonk.Araba
 import com.example.carworth.uix.view.fonk.Dropdowns
 import com.example.carworth.uix.view.fonk.Listeler
 import com.example.carworth.uix.view.fonk.Textfields
-import com.example.carworth.uix.view.fonk.VSpacers
 import com.example.carworth.uix.view.fonk.getArabaFiyati
 
-import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 
 @Composable
 
 fun SoruSayfalari(navController: NavController){
     val currentquest= remember{ mutableStateOf(0) }
+    val scope = rememberCoroutineScope()
+
     val secilenSehir=remember{mutableStateOf("")}
     val secilenMarka=remember{mutableStateOf("")}
     val secilenSeri=remember{mutableStateOf("")}
     val secilenModel=remember{mutableStateOf("")}
-    val secilenYil=remember{mutableStateOf("")}
+    val secilenYil=remember{mutableStateOf(0)}
     val girilenKM=remember{mutableStateOf(0)}
     val secilenVitesTipi=remember{mutableStateOf("")}
     val secilenYakitTipi=remember{mutableStateOf("")}
@@ -76,7 +67,7 @@ fun SoruSayfalari(navController: NavController){
     val girilenTramer=remember{mutableStateOf(0.0)}
     val secilenBoya=remember{mutableStateOf(0)}
     val secilenDegisen=remember{mutableStateOf(0)}
-    val fiyat=remember{mutableStateOf("")}
+    val fiyat=remember{mutableStateOf("Hesaplanıyor...")}
 
 
     Scaffold {paddingValues ->
@@ -120,7 +111,7 @@ fun SoruSayfalari(navController: NavController){
 
                                     }
                                     2-> {
-                                        Dropdowns("Yıl","Yıl Seçiniz",Listeler().yil, onItemSelected = {secilen->secilenYil.value=secilen})
+                                        Dropdowns("Yıl","Yıl Seçiniz",Listeler().yil, onItemSelected = {secilen->secilenYil.value=secilen.toInt()})
                                         Textfields("Kilometre Giriniz","Kilometre Giriniz",
                                             { deger -> girilenKM.value = deger.toInt() })
                                         Dropdowns("Renk","Renk Seçiniz",Listeler().renk, onItemSelected = {secilen->secilenrenk.value=secilen})
@@ -160,7 +151,7 @@ fun SoruSayfalari(navController: NavController){
                                                 secilenMarka.value,
                                                 secilenSeri.value,
                                                 secilenModel.value,
-                                                secilenYil.value.toInt(),
+                                                secilenYil.value,
                                                 girilenKM.value,
                                                 secilenrenk.value,
                                                 secilenVitesTipi.value,
@@ -174,30 +165,16 @@ fun SoruSayfalari(navController: NavController){
                                                 secilenBoya.value,
                                                 secilenDegisen.value,
                                                 girilenTramer.value)
-                                            Log.e("ArabaInput", """
-                                                        Sehir: ${secilenSehir.value}
-                                                        Marka: ${secilenMarka.value}
-                                                        Seri: ${secilenSeri.value}
-                                                        Model: ${secilenModel.value}
-                                                        Yil: ${secilenYil.value}
-                                                        KM: ${girilenKM.value}
-                                                        Renk: ${secilenrenk.value}
-                                                        Vites: ${secilenVitesTipi.value}
-                                                        Yakit: ${secilenYakitTipi.value}
-                                                        Kasa: ${secilenKasaTipi.value}
-                                                        Motor Hacmi: ${girilenMotorHacmi.value}
-                                                        Motor Gücü: ${girilenMotorGucu.value}
-                                                        Çekiş: ${secilenCekis.value}
-                                                        Ortalama Yakıt: ${girilenOrtYakit.value}
-                                                        Yakıt Deposu: ${girilenYakitDepo.value}
-                                                        Boya: ${secilenBoya.value}
-                                                        Değişen: ${secilenDegisen.value}
-                                                        Tramer: ${girilenTramer.value}
-                                                    """.trimIndent())
-                                            LaunchedEffect(araba) {
-                                                val price = withContext(Dispatchers.IO) { getArabaFiyati(araba) }
-                                                fiyat.value = price?.let { "Tahmini Fiyat: $it" } ?: "Hata oluştu!"
+
+                                            Button(onClick = {
+                                                scope.launch {
+                                                    val price = getArabaFiyati(araba)
+                                                    fiyat.value = price?.let { "Tahmini Fiyat: $it" } ?: "Hata oluştu!"
+                                                }
+                                            }){
+                                                Text(text = "Fiyat Al")
                                             }
+
                                             Text(text = fiyat.value)
 
                                         }

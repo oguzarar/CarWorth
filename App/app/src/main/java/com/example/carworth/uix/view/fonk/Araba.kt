@@ -1,18 +1,21 @@
 package com.example.carworth.uix.view.fonk
 
+import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.Serializable
+import io.ktor.http.isSuccess
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.double
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.doubleOrNull
 
 
 @Serializable
@@ -36,28 +39,32 @@ data class Araba(
     val degisen: Int,
     val tramer: Double
 )
-
 suspend fun getArabaFiyati(araba: Araba): Double? {
-    val client = HttpClient(CIO)
-    try {
-        val response: HttpResponse = client.get("https://carworth-vhir.onrender.com/araba") {
+    val client = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json()
+        }
+    }
+
+    return try {
+        val response = client.post("https://carworth-vhir.onrender.com/araba") {
             contentType(ContentType.Application.Json)
             setBody(araba)
         }
 
-        if (response.status.value in 200..299) {
-            val jsonString = response.bodyAsText()
-            val jsonElement = Json.parseToJsonElement(jsonString)
-            val fiyat = jsonElement.jsonObject["fiyat"]?.jsonPrimitive?.double
-            return fiyat
-        } else {
-            println("Backend hata verdi: ${response.status}")
-            return null
-        }
+        if (!response.status.isSuccess()) return null
+
+        val jsonString = response.bodyAsText()
+        val jsonElement = Json.parseToJsonElement(jsonString)
+        jsonElement.jsonObject["fiyat"]?.jsonPrimitive?.doubleOrNull
+
     } catch (e: Exception) {
-        e.printStackTrace()
-        return null
+        println("Hata: ${e.message}")
+        null
     } finally {
         client.close()
     }
 }
+
+
+
