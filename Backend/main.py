@@ -31,7 +31,7 @@ model.load_model("araba_fiyat_model.cbm")
 def read_root():
     return {"message": "Hello World"}
 
-@app.post("/araba")
+@app.get("/araba")
 async def araba_ekle(araba: Araba):
     data=pd.DataFrame([{ "konum": araba.sehir,
                          "marka": araba.marka,
