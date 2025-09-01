@@ -27,6 +27,10 @@ app = FastAPI()
 model = CatBoostRegressor()
 model.load_model("araba_fiyat_model.cbm")
 
+@app.get("/")
+def read_root():
+    return {"message": "Hello World"}
+
 @app.post("/araba")
 async def araba_ekle(araba: Araba):
     data=pd.DataFrame([{ "konum": araba.sehir,
