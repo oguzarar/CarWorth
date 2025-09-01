@@ -9,3 +9,4 @@ Makine Öğrenimi: CatBoost (Model eğitimi ve tahmin)
 Backend API: FastAPI (Python web framework)
 İletişim: HTTP istekleri (Kotlin'den Python API'sine)
 
+![Uygulama Ekran Görüntüsü](Images/Anasayfa.jpg)
