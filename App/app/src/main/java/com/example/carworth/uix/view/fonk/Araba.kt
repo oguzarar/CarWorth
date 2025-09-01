@@ -40,7 +40,7 @@ data class Araba(
 suspend fun getArabaFiyati(araba: Araba): Double? {
     val client = HttpClient(CIO)
     try {
-        val response: HttpResponse = client.post("https://carworth-vhir.onrender.com/araba") {
+        val response: HttpResponse = client.get("https://carworth-vhir.onrender.com/araba") {
             contentType(ContentType.Application.Json)
             setBody(araba)
         }
