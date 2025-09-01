@@ -10,3 +10,7 @@ Backend API: FastAPI (Python web framework)
 İletişim: HTTP istekleri (Kotlin'den Python API'sine)
 
 ![Uygulama Ekran Görüntüsü](Images/Anasayfa.jpg)
+![Uygulama Ekran Görüntüsü](Images/SoruSayfasi.jpg)
+![Uygulama Ekran Görüntüsü](Images/Tahmin.jpg)
+![Uygulama Ekran Görüntüsü](Images/Grafik.png)
+
