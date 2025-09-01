@@ -15,4 +15,4 @@ Backend API: FastAPI (Python web framework)
   <img src="Images/Tahmin.jpg" alt="Resim 3" width="200"/>
   
 </p>
-<img src="Images/Grafik.png" alt="Resim 4" width="500"/>
+<img src="Images/Grafik.png" alt="Resim 4" width="600"/>
