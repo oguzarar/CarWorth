@@ -15,13 +15,13 @@ class Araba(BaseModel):
     yakitTipi: str
     kasaTipi: str
     motorHacmi: float
-    motorGucu: int
+    motorGucu: float
     cekis: str
     ortYakit: float
     yakitDeposu: float
     boya: str
     degisen: str
-    tramer: str
+    tramer: float
 
 app = FastAPI()
 model = CatBoostRegressor()
@@ -51,4 +51,7 @@ async def araba_ekle(araba: Araba):
 
 
     sonuc = model.predict(data)
-    return {"fiyat": float(sonuc[0])}
+    if float(sonuc[0]):
+        return {"fiyat": float(sonuc[0])}
+    else:
+        return {"fiyat": float(0)}

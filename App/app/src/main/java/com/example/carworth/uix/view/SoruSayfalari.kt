@@ -23,6 +23,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,9 +47,11 @@ import com.example.carworth.uix.view.fonk.Dropdowns
 import com.example.carworth.uix.view.fonk.Listeler
 import com.example.carworth.uix.view.fonk.Textfields
 import com.example.carworth.uix.view.fonk.VSpacers
-import com.example.carworth.uix.view.fonk.sendAraba
-import com.google.gson.Gson
+import com.example.carworth.uix.view.fonk.getArabaFiyati
 
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 @Composable
@@ -71,8 +74,9 @@ fun SoruSayfalari(navController: NavController){
     val girilenOrtYakit=remember{mutableStateOf(0.0)}
     val girilenYakitDepo=remember{mutableStateOf(0.0)}
     val girilenTramer=remember{mutableStateOf(0.0)}
-    val secilenBoya=remember{mutableStateOf("")}
-    val secilenDegisen=remember{mutableStateOf("")}
+    val secilenBoya=remember{mutableStateOf(0)}
+    val secilenDegisen=remember{mutableStateOf(0)}
+    val fiyat=remember{mutableStateOf("")}
 
 
     Scaffold {paddingValues ->
@@ -137,8 +141,8 @@ fun SoruSayfalari(navController: NavController){
                                         Textfields("Yakıt Deposu","Yakıt Deposu",{ deger -> girilenYakitDepo.value = deger.toDouble() })
                                     }
                                     6-> {
-                                        Dropdowns("Boya","Boya",Listeler().boyaDegisen, onItemSelected = {secilen->secilenBoya.value=secilen})
-                                        Dropdowns("Değişen","Değişen",Listeler().boyaDegisen, onItemSelected = {secilen->secilenDegisen.value=secilen})
+                                        Dropdowns("Boya","Boya",Listeler().boyaDegisen, onItemSelected = {secilen->secilenBoya.value=secilen.toInt()})
+                                        Dropdowns("Değişen","Değişen",Listeler().boyaDegisen, onItemSelected = {secilen->secilenDegisen.value=secilen.toInt()})
                                         Textfields("Tramer","Tramer",{ deger -> girilenTramer.value = deger.toDouble() })
                                     }
                                     7->{
@@ -170,8 +174,32 @@ fun SoruSayfalari(navController: NavController){
                                                 secilenBoya.value,
                                                 secilenDegisen.value,
                                                 girilenTramer.value)
-                                            val gson= Gson()
-                                            val CarInfo=gson.toJson(araba)
+                                            Log.e("ArabaInput", """
+                                                        Sehir: ${secilenSehir.value}
+                                                        Marka: ${secilenMarka.value}
+                                                        Seri: ${secilenSeri.value}
+                                                        Model: ${secilenModel.value}
+                                                        Yil: ${secilenYil.value}
+                                                        KM: ${girilenKM.value}
+                                                        Renk: ${secilenrenk.value}
+                                                        Vites: ${secilenVitesTipi.value}
+                                                        Yakit: ${secilenYakitTipi.value}
+                                                        Kasa: ${secilenKasaTipi.value}
+                                                        Motor Hacmi: ${girilenMotorHacmi.value}
+                                                        Motor Gücü: ${girilenMotorGucu.value}
+                                                        Çekiş: ${secilenCekis.value}
+                                                        Ortalama Yakıt: ${girilenOrtYakit.value}
+                                                        Yakıt Deposu: ${girilenYakitDepo.value}
+                                                        Boya: ${secilenBoya.value}
+                                                        Değişen: ${secilenDegisen.value}
+                                                        Tramer: ${girilenTramer.value}
+                                                    """.trimIndent())
+                                            LaunchedEffect(araba) {
+                                                val price = withContext(Dispatchers.IO) { getArabaFiyati(araba) }
+                                                fiyat.value = price?.let { "Tahmini Fiyat: $it" } ?: "Hata oluştu!"
+                                            }
+                                            Text(text = fiyat.value)
+
                                         }
                                     }
                                 }

@@ -5,11 +5,14 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 
 @Serializable
@@ -29,23 +32,32 @@ data class Araba(
     val cekis: String,
     val ortYakit: Double,
     val yakitDeposu: Double,
-    val boya: String,
-    val degisen: String,
+    val boya: Int,
+    val degisen: Int,
     val tramer: Double
 )
 
-suspend fun sendAraba(araba: Araba) {
-    val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(Json { prettyPrint = true; isLenient = true })
+suspend fun getArabaFiyati(araba: Araba): Double? {
+    val client = HttpClient(CIO)
+    try {
+        val response: HttpResponse = client.post("https://carworth-vhir.onrender.com/araba") {
+            contentType(ContentType.Application.Json)
+            setBody(araba)
         }
-    }
 
-    val response: HttpResponse = client.post("http://your-fastapi-url/araba") {
-        contentType(io.ktor.http.ContentType.Application.Json)
-        setBody(araba)
+        if (response.status.value in 200..299) {
+            val jsonString = response.bodyAsText()
+            val jsonElement = Json.parseToJsonElement(jsonString)
+            val fiyat = jsonElement.jsonObject["fiyat"]?.jsonPrimitive?.double
+            return fiyat
+        } else {
+            println("Backend hata verdi: ${response.status}")
+            return null
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return null
+    } finally {
+        client.close()
     }
-
-    println(response.status)
-    client.close()
 }
