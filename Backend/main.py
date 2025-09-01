@@ -19,8 +19,8 @@ class Araba(BaseModel):
     cekis: str
     ortYakit: float
     yakitDeposu: float
-    boya: str
-    degisen: str
+    boya: int
+    degisen: int
     tramer: float
 
 app = FastAPI()
