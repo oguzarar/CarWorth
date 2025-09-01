@@ -60,5 +60,5 @@ async def araba_ekle(araba: Araba):
 
     sonuc = model.predict(data)
     fiyat=yuvarla(int(sonuc[0]))
-    return fiyat
+    return {"fiyat": float(fiyat)}
 
