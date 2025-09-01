@@ -14,12 +14,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -38,16 +39,13 @@ import com.example.carworth.uix.view.fonk.Araba
 import com.example.carworth.uix.view.fonk.Dropdowns
 import com.example.carworth.uix.view.fonk.Listeler
 import com.example.carworth.uix.view.fonk.Textfields
+import com.example.carworth.uix.view.fonk.VSpacers
 import com.example.carworth.uix.view.fonk.getArabaFiyati
-
-import kotlinx.coroutines.launch
-
 
 @Composable
 
 fun SoruSayfalari(navController: NavController){
     val currentquest= remember{ mutableStateOf(0) }
-    val scope = rememberCoroutineScope()
 
     val secilenSehir=remember{mutableStateOf("")}
     val secilenMarka=remember{mutableStateOf("")}
@@ -67,7 +65,8 @@ fun SoruSayfalari(navController: NavController){
     val girilenTramer=remember{mutableStateOf(0.0)}
     val secilenBoya=remember{mutableStateOf(0)}
     val secilenDegisen=remember{mutableStateOf(0)}
-    val fiyat=remember{mutableStateOf("Hesaplanıyor...")}
+    val fiyat=remember{mutableStateOf("")}
+    val loading = remember { mutableStateOf(true) }
 
 
     Scaffold {paddingValues ->
@@ -141,11 +140,12 @@ fun SoruSayfalari(navController: NavController){
                                             horizontalAlignment = Alignment.CenterHorizontally,
                                             modifier = Modifier
                                                 .fillMaxWidth()
-                                                .padding(top = 24.dp)) {
+                                                .padding(top = 124.dp)) {
                                             Text(
                                                 text = "Tahmini Fİyat",
                                                 style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                                             )
+                                            VSpacers(12)
                                             val araba= Araba(
                                                 secilenSehir.value,
                                                 secilenMarka.value,
@@ -166,16 +166,19 @@ fun SoruSayfalari(navController: NavController){
                                                 secilenDegisen.value,
                                                 girilenTramer.value)
 
-                                            Button(onClick = {
-                                                scope.launch {
-                                                    val price = getArabaFiyati(araba)
-                                                    fiyat.value = price?.let { "Tahmini Fiyat: $it" } ?: "Hata oluştu!"
-                                                }
-                                            }){
-                                                Text(text = "Fiyat Al")
+
+                                            LaunchedEffect(araba) {
+                                                loading.value = true
+                                                val price = getArabaFiyati(araba)
+                                                fiyat.value = price?.let { "$it" } ?: "Hata oluştu!"
+                                                loading.value = false
+                                            }
+                                            if (loading.value) {
+                                                CircularProgressIndicator()
+                                            } else {
+                                                Text(fiyat.value ?: "Hata oluştu!", fontSize = 25.sp)
                                             }
 
-                                            Text(text = fiyat.value)
 
                                         }
                                     }
@@ -198,16 +201,9 @@ fun SoruSayfalari(navController: NavController){
                         ) {
                             Text("Devam Et", style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold))
                         }
-
-
                     }
-
                 }
-
-
             }
-
-
             }
     }
 }
