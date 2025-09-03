@@ -89,7 +89,7 @@ fun SonucSayfasi(navController: NavController,araba: Araba) {
                                     )
                                 )
                                 VSpacers(36)
-                                Text(text = "${araba.marka} ${araba.seri} ${araba.model} ",
+                                Text(text = "${araba.marka} ${araba.model} ${araba.seri}",
                                     style = TextStyle(
                                         fontSize = 15.sp,
                                         fontWeight = FontWeight.Bold,
