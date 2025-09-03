@@ -52,7 +52,7 @@ class Listeler(){
         "Peugeot" to listOf("207", "206", "106", "508", "107", "301", "208", "307", "308", "306", "206+", "407", "406", "RCZ", "807"),
         "Porsche" to listOf("Panamera"),
         "Proton" to listOf("418", "415", "Gen 2", "315", "Waja"),
-        "Renault" to listOf("Megane", "Clio", "Symbol", "Fluence", "Talisman", "Laguna", "Modus", "Taliant", "Latitude", "Scenic", "Grand Scenic", "Safrane", "Espace", "Twingo"),
+        "Renault" to listOf("Megane", "Clio", "Symbol", "Fluence", "Talisman", "Laguna", "Modus", "Taliant", "Latitude", "Scenic", "Grand Scenic", "Safrane", "Espace", "Twingo","R 19"),
         "Rover" to listOf("214", "216", "414", "25", "75", "416"),
         "Seat" to listOf("Ibiza", "Leon", "Toledo", "Cordoba", "Alhambra", "Exeo", "Altea"),
         "Skoda" to listOf("Octavia", "Fabia", "Scala", "SuperB", "Rapid", "Felicia", "Roomster"),
@@ -280,6 +280,7 @@ class Listeler(){
         "Punto" to listOf("Grande 1.4 Fire Active", "1.4 Dynamic", "EVO 1.3 Multijet Active", "Grande 1.3 Multijet Active", "Grande 1.4 Fire Dynamic", "EVO 1.4 Dynamic", "EVO 1.4 Fire Dynamic", "1.4 Easy S&S", "1.3 Multijet Pop", "1.2 Dynamic", "Grande 1.3 Multijet Dynamic", "1.3 Multijet Dynamic", "1.4 Popstar S&S", "EVO 1.4 Active", "1.4 Lounge S&S", "Grande 1.4 T-Jet Dynamic", "EVO 1.3 Multijet Dynamic", "Grande 1.4 Starjet Dynamic", "1.2 Pop", "1.3 Multijet Lounge", "1.4 Pop S&S", "1.3 Multijet Urban", "1.3 Multijet Easy", "Grande 1.3 Multijet Emotion", "1.3 Multijet Popstar", "1.2 Popstar", "Grande 1.3 Multijet 1.3 Multijet", "Grande 1.4 Fire S&S", "1.4 Mair Easy S&S", "EVO 1.4 Fire My Life", "EVO 1.3 Multijet My Life", "Grande 1.4 T-Jet Sport", "EVO 1.4 Multiair Dynamic", "Grande 1.3 Multijet Fun", "1.3 Multijet Shine", "Grande 1.4 Fire Fun", "Grande 1.2 S5"),
         "Q30" to listOf("1.6"),
         "RCZ" to listOf("1.6 THP Evolution", "1.6 THP Yearling"),
+        "R 19" to listOf("1.4", "1.4 Europa", "1.6", "1.6 Europa", "1.7", "1.7 Europa", "1.8", "1.8 Europa", "1.8 RTi", "1.9", "1.9 Europa"),
         "Rapid" to listOf("1.2 TSI Ambition", "1.6 TDI Spaceback Elegance", "1.4 TDI Ambition", "1.6 TDI Elegance", "1.4 TDI GreenTec Style", "1.2 Spaceback Ambition", "1.6 TDI Active", "1.6 TDI Ambition", "1.0 TSI GreenTec Style", "1.2 Ambition", "1.2 TSI Spaceback Elegance", "1.0 TSI GreenTec Ambition", "1.2 TSI GreenTec Style", "1.4 TDI GreenTec Ambition"),
         "Rezzo" to listOf("1.6 SX Comfort"),
         "Rio" to listOf("1.5 CRDi EX Comfort", "1.25 CVVT Fancy", "1.5 Comfort", "1.4 CVVT Fancy", "1.4 GSL Trend", "1.4 CVVT Cool", "1.4 CVVT Comfort", "1.4 CRDi Concept", "1.5 CRDi Trend", "1.5 CRDi EX Advance", "1.4 CRDi Fancy", "1.4 CRDi Concept Plus", "1.4 CRDi Natty", "1.4 CRDi Sporty", "1.4 WGT Cool", "1.4 EX Comfort", "1.4 CRDi Comfort", "1.25 CVVT Cool", "1.4 CVVT Concept", "1.25 CVVT Concept", "1.3 Comfort", "1.4 WGT Elegance", "1.4 EX Advance", "1.25 CVVT Comfort", "1.5 Trend", "1.25 CVVT Natty", "1.3 Trend", "1.4 CVVT Natty", "1.4L MPI Elegance", "1.3 Base", "1.25 CVVT Elegance Tekno"),
@@ -367,7 +368,7 @@ class Listeler(){
 
     val cekis=listOf("Önden Çekiş","Arkadan İtiş","4WD (Sürekli)","AWD (Elektronik)")
 
-    val yil = (1975..2025).toList()
+    val yil = (2025 downTo 1975).toList()
 
     val boyaDegisen=(0..15).toList()
 

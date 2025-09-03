@@ -41,6 +41,7 @@ import com.example.carworth.uix.view.fonk.Listeler
 import com.example.carworth.uix.view.fonk.Textfields
 import com.example.carworth.uix.view.fonk.VSpacers
 import com.example.carworth.uix.view.fonk.getArabaFiyati
+import com.google.gson.Gson
 
 @Composable
 
@@ -65,8 +66,7 @@ fun SoruSayfalari(navController: NavController){
     val girilenTramer=remember{mutableStateOf(0.0)}
     val secilenBoya=remember{mutableStateOf(0)}
     val secilenDegisen=remember{mutableStateOf(0)}
-    val fiyat=remember{mutableStateOf("")}
-    val loading = remember { mutableStateOf(true) }
+
 
 
     Scaffold {paddingValues ->
@@ -136,51 +136,28 @@ fun SoruSayfalari(navController: NavController){
                                         Textfields("Tramer","Tramer",{ deger -> girilenTramer.value = deger.toDouble() })
                                     }
                                     7->{
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(top = 124.dp)) {
-                                            Text(
-                                                text = "Tahmini Fİyat",
-                                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-                                            )
-                                            VSpacers(12)
-                                            val araba= Araba(
-                                                secilenSehir.value,
-                                                secilenMarka.value,
-                                                secilenSeri.value,
-                                                secilenModel.value,
-                                                secilenYil.value,
-                                                girilenKM.value,
-                                                secilenrenk.value,
-                                                secilenVitesTipi.value,
-                                                secilenYakitTipi.value,
-                                                secilenKasaTipi.value,
-                                                girilenMotorHacmi.value,
-                                                girilenMotorGucu.value,
-                                                secilenCekis.value,
-                                                girilenOrtYakit.value,
-                                                girilenYakitDepo.value,
-                                                secilenBoya.value,
-                                                secilenDegisen.value,
-                                                girilenTramer.value)
+                                        val araba= Araba(
+                                            secilenSehir.value,
+                                            secilenMarka.value,
+                                            secilenSeri.value,
+                                            secilenModel.value,
+                                            secilenYil.value,
+                                            girilenKM.value,
+                                            secilenrenk.value,
+                                            secilenVitesTipi.value,
+                                            secilenYakitTipi.value,
+                                            secilenKasaTipi.value,
+                                            girilenMotorHacmi.value,
+                                            girilenMotorGucu.value,
+                                            secilenCekis.value,
+                                            girilenOrtYakit.value,
+                                            girilenYakitDepo.value,
+                                            secilenBoya.value,
+                                            secilenDegisen.value,
+                                            girilenTramer.value)
+                                        val arabaJson= Gson().toJson(araba)
+                                        navController.navigate("sonucsayfasi/$arabaJson")
 
-
-                                            LaunchedEffect(araba) {
-                                                loading.value = true
-                                                val price = getArabaFiyati(araba)
-                                                fiyat.value = price?.let { "$it" } ?: "Hata oluştu!"
-                                                loading.value = false
-                                            }
-                                            if (loading.value) {
-                                                CircularProgressIndicator()
-                                            } else {
-                                                Text(fiyat.value ?: "Hata oluştu!", fontSize = 25.sp)
-                                            }
-
-
-                                        }
                                     }
                                 }
                             }
