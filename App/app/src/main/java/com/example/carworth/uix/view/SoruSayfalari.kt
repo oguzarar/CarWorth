@@ -1,5 +1,6 @@
 package com.example.carworth.uix.view
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +44,7 @@ import com.example.carworth.uix.view.fonk.Textfields
 import com.example.carworth.uix.view.fonk.VSpacers
 import com.example.carworth.uix.view.fonk.getArabaFiyati
 import com.google.gson.Gson
+import java.lang.NumberFormatException
 
 @Composable
 
@@ -66,6 +69,12 @@ fun SoruSayfalari(navController: NavController){
     val girilenTramer=remember{mutableStateOf(0.0)}
     val secilenBoya=remember{mutableStateOf(0)}
     val secilenDegisen=remember{mutableStateOf(0)}
+
+    val girdiKontrol=remember{mutableStateOf(true)}
+
+    val sayiKontrol=remember{mutableStateOf(true)}
+
+    val context=LocalContext.current
 
 
 
@@ -94,46 +103,80 @@ fun SoruSayfalari(navController: NavController){
                                     .padding(start = 15.dp, top = 15.dp)
                                     .size(32.dp)
                                     .clickable {
-                                        if (currentquest.value > 0) {
+                                        if (currentquest.value > -1) {
                                             currentquest.value--
                                         }
                                     })
                             Column() {
                                 when(currentquest.value){
+                                    -1->{
+                                        navController.navigate("anasayfa")
+
+                                    }
                                     0-> {
                                         Dropdowns("Şehir Seçiniz","Şehir Seçiniz", Listeler().sehirList, onItemSelected = {secilen->secilenSehir.value=secilen})
+                                        girdiKontrol.value = secilenSehir.value.isNotEmpty()
                                     }
                                     1-> {
                                         Dropdowns("Marka","Marka Seçiniz", Listeler().arabaMarkalari, onItemSelected = {secilen->secilenMarka.value=secilen})
                                         Dropdowns("Seri","Seri Seçiniz",Listeler().arabaModel[secilenMarka.value]?:emptyList(), onItemSelected = {secilen->secilenModel.value=secilen})
                                         Dropdowns("Model","Model Seçiniz",Listeler().arabaSeri[secilenModel.value]?:emptyList(), onItemSelected = {secilen->secilenSeri.value=secilen})
+                                        girdiKontrol.value=secilenMarka.value.isNotEmpty()&& secilenModel.value.isNotEmpty() && secilenSeri.value.isNotEmpty()
 
                                     }
                                     2-> {
                                         Dropdowns("Yıl","Yıl Seçiniz",Listeler().yil, onItemSelected = {secilen->secilenYil.value=secilen.toInt()})
                                         Textfields("Kilometre Giriniz","Kilometre Giriniz",
-                                            { deger -> girilenKM.value = deger.toInt() })
+                                            { deger ->
+                                                try {
+                                                    girilenKM.value = deger.toInt()
+                                                }catch (e: NumberFormatException){
+                                                    Toast.makeText(
+                                                        context,"Sayı giriniz",
+                                                        Toast.LENGTH_SHORT).show()
+                                                }
+                                                 })
                                         Dropdowns("Renk","Renk Seçiniz",Listeler().renk, onItemSelected = {secilen->secilenrenk.value=secilen})
+                                        girdiKontrol.value=secilenYil.value!=0 && secilenrenk.value.isNotEmpty() && girilenKM.value>-1
                                     }
                                     3-> {
                                         Dropdowns("Vites Tipi","Vites Tipi Seçiniz",Listeler().vites_tipi, onItemSelected = {secilen->secilenVitesTipi.value=secilen})
                                         Dropdowns("Yakıt Tipi","Yakıt Tipi Seçiniz",Listeler().yakit_tipi, onItemSelected = {secilen->secilenYakitTipi.value=secilen})
                                         Dropdowns("Kasa Tipi","Kasa Tipi Seçiniz",Listeler().kasa_tipi, onItemSelected = {secilen->secilenKasaTipi.value=secilen})
-
+                                        girdiKontrol.value=secilenVitesTipi.value.isNotEmpty() && secilenYakitTipi.value.isNotEmpty() && secilenKasaTipi.value.isNotEmpty()
                                     }
                                     4-> {
-                                        Textfields("Motor Hacmi","Motor Hacmi",{ deger -> girilenMotorHacmi.value = deger.toDouble() })
-                                        Textfields("Motor Gücü","Motor Gücü",{ deger -> girilenMotorGucu.value = deger.toDouble() })
+                                        Textfields("Motor Hacmi","Motor Hacmi",{ deger ->
+                                            try {
+                                                girilenMotorHacmi.value = deger.toDouble()
+                                            }catch (e: NumberFormatException){
+                                                Toast.makeText(
+                                                    context,"Sayı giriniz",
+                                                    Toast.LENGTH_SHORT).show()
+                                            }
+                                             })
+                                        Textfields("Motor Gücü","Motor Gücü",{ deger ->
+                                            try {
+                                                girilenMotorGucu.value = deger.toDouble()
+                                            }catch (e: NumberFormatException){
+                                                Toast.makeText(
+                                                    context,"Sayı giriniz",
+                                                    Toast.LENGTH_SHORT).show()
+                                            }
+                                             })
                                         Dropdowns("Çekiş","Çekiş Tipi Seçiniz",Listeler().cekis, onItemSelected = {secilen->secilenCekis.value=secilen})
+                                        girdiKontrol.value=girilenMotorHacmi.value>=0.0 && girilenMotorGucu.value>=0.0 && secilenCekis.value.isNotEmpty()
                                     }
                                     5-> {
                                         Textfields("Ort. Yakıt Tüketimi","Ort. Yakıt Tüketimi",{ deger -> girilenOrtYakit.value = deger.toDouble() })
                                         Textfields("Yakıt Deposu","Yakıt Deposu",{ deger -> girilenYakitDepo.value = deger.toDouble() })
+                                        girdiKontrol.value=girilenYakitDepo.value!=0.0 && girilenOrtYakit.value!=0.0
                                     }
                                     6-> {
                                         Dropdowns("Boya","Boya",Listeler().boyaDegisen, onItemSelected = {secilen->secilenBoya.value=secilen.toInt()})
                                         Dropdowns("Değişen","Değişen",Listeler().boyaDegisen, onItemSelected = {secilen->secilenDegisen.value=secilen.toInt()})
                                         Textfields("Tramer","Tramer",{ deger -> girilenTramer.value = deger.toDouble() })
+                                        girdiKontrol.value=secilenBoya.value!=0 && secilenDegisen.value!=0 && girilenTramer.value!=0.0
                                     }
                                     7->{
                                         val araba= Araba(
@@ -165,7 +208,14 @@ fun SoruSayfalari(navController: NavController){
                         Button(
                             onClick = {
                                 if(currentquest.value<7){
-                                    currentquest.value++
+                                    if(girdiKontrol.value){
+                                        currentquest.value++
+                                    }else{
+                                        Toast.makeText(
+                                            context,"Lütfen tüm alanları doldurun",
+                                            Toast.LENGTH_SHORT).show()
+                                    }
+
                                 }
                                       },
                             shape = RoundedCornerShape(10.dp),

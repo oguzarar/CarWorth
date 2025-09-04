@@ -38,6 +38,7 @@ import kotlin.collections.forEachIndexed
 
 fun <T> Dropdowns(baslik: String,placeholder: String,list: List<T>,
                   onItemSelected: (String) -> Unit){
+    val kontrol=remember { mutableStateOf(false) }
     val aciliskontrol=remember { mutableStateOf(false) }
     var placetext=remember{mutableStateOf(placeholder)}
     Column(
@@ -67,7 +68,8 @@ fun <T> Dropdowns(baslik: String,placeholder: String,list: List<T>,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = placetext.value, color = Color.Gray)
+                Text(text = placetext.value,
+                    color = if(kontrol.value) Color.Black else Color.Gray)
                 Image(
                     painter = painterResource(R.drawable.dropdownitem),
                     contentDescription = "",
@@ -86,6 +88,7 @@ fun <T> Dropdowns(baslik: String,placeholder: String,list: List<T>,
                             placetext.value=string.toString()
                             aciliskontrol.value=false
                             onItemSelected(string.toString())
+                            kontrol.value=true
                         })
                 }
             }
