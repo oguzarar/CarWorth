@@ -40,7 +40,7 @@ fun <T> Dropdowns(baslik: String,placeholder: String,list: List<T>,
                   onItemSelected: (String) -> Unit){
     val kontrol=remember { mutableStateOf(false) }
     val aciliskontrol=remember { mutableStateOf(false) }
-    var placetext=remember{mutableStateOf(placeholder)}
+    val placetext=remember{mutableStateOf(placeholder)}
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

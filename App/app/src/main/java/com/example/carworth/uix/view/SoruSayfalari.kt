@@ -15,11 +15,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,8 +39,6 @@ import com.example.carworth.uix.view.fonk.Araba
 import com.example.carworth.uix.view.fonk.Dropdowns
 import com.example.carworth.uix.view.fonk.Listeler
 import com.example.carworth.uix.view.fonk.Textfields
-import com.example.carworth.uix.view.fonk.VSpacers
-import com.example.carworth.uix.view.fonk.getArabaFiyati
 import com.google.gson.Gson
 import java.lang.NumberFormatException
 
@@ -71,8 +67,6 @@ fun SoruSayfalari(navController: NavController){
     val secilenDegisen=remember{mutableStateOf(0)}
 
     val girdiKontrol=remember{mutableStateOf(true)}
-
-    val sayiKontrol=remember{mutableStateOf(true)}
 
     val context=LocalContext.current
 
@@ -176,7 +170,7 @@ fun SoruSayfalari(navController: NavController){
                                         Dropdowns("Boya","Boya",Listeler().boyaDegisen, onItemSelected = {secilen->secilenBoya.value=secilen.toInt()})
                                         Dropdowns("Değişen","Değişen",Listeler().boyaDegisen, onItemSelected = {secilen->secilenDegisen.value=secilen.toInt()})
                                         Textfields("Tramer","Tramer",{ deger -> girilenTramer.value = deger.toDouble() })
-                                        girdiKontrol.value=secilenBoya.value!=0 && secilenDegisen.value!=0 && girilenTramer.value!=0.0
+                                        girdiKontrol.value=secilenBoya.value>=0 && secilenDegisen.value>=0 && girilenTramer.value>=0.0
                                     }
                                     7->{
                                         val araba= Araba(
