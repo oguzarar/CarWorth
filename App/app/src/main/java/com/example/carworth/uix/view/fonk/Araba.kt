@@ -25,7 +25,7 @@ data class Araba(
     val seri: String,
     val model: String,
     val yil: Int,
-    val kilometre: Int,
+    val kilometre: Double,
     val vitesTipi: String,
     val yakitTipi: String,
     val kasaTipi: String,

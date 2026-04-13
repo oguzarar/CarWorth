@@ -9,7 +9,7 @@ class Araba(BaseModel):
     seri: str
     model: str
     yil: int
-    kilometre: int
+    kilometre: float
     vitesTipi: str
     yakitTipi: str
     kasaTipi: str

@@ -53,7 +53,7 @@ fun SoruSayfalari(navController: NavController){
     val secilenSeri=remember{mutableStateOf("")}
     val secilenModel=remember{mutableStateOf("")}
     val secilenYil=remember{mutableStateOf(0)}
-    val girilenKM=remember{mutableStateOf(0)}
+    val girilenKM=remember{mutableStateOf(0.0)}
     val secilenVitesTipi=remember{mutableStateOf("")}
     val secilenYakitTipi=remember{mutableStateOf("")}
     val secilenKasaTipi=remember{mutableStateOf("")}
@@ -123,7 +123,7 @@ fun SoruSayfalari(navController: NavController){
                                         Textfields("Kilometre Giriniz","Kilometre Giriniz",
                                             { deger ->
                                                 try {
-                                                    girilenKM.value = deger.toInt()
+                                                    girilenKM.value = deger.toDouble()
                                                 }catch (e: NumberFormatException){
                                                     Toast.makeText(
                                                         context,"Sayı giriniz",
