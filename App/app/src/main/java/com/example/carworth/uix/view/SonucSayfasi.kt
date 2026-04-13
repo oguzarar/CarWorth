@@ -1,5 +1,6 @@
 package com.example.carworth.uix.view
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,6 +39,7 @@ import com.example.carworth.ui.theme.backgroundColor
 import com.example.carworth.uix.view.data.retrofit.Resource
 import com.example.carworth.uix.view.fonk.Araba
 import com.example.carworth.uix.view.fonk.VSpacers
+import com.google.gson.Gson
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -108,11 +110,9 @@ fun SonucSayfasi(navController: NavController,araba: Araba,viewmodel: Viewmodel 
                                         Text("$sonuc TL", fontSize = 25.sp)
                                     }
                                     is Resource.Error -> {
-                                        Log.e("price",price.toString())
-                                        Text(
-                                            text = price.message,
-                                            color = Color.Red
-                                        )
+                                        val arabaJson= Gson().toJson(araba)
+                                        val encodedJson = Uri.encode(arabaJson)
+                                        navController.navigate("sonucsayfasi/$encodedJson")
                                     }
                                 }
 
