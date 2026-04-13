@@ -10,7 +10,6 @@ class Araba(BaseModel):
     model: str
     yil: int
     kilometre: int
-    renk: str
     vitesTipi: str
     yakitTipi: str
     kasaTipi: str
@@ -47,7 +46,6 @@ async def araba_ekle(araba: Araba):
         "vites_tipi": araba.vitesTipi,
         "yakit_tipi": araba.yakitTipi,
         "kasa_tipi": araba.kasaTipi,
-        "renk": araba.renk,
         "motor_hacmi": araba.motorHacmi,
         "motor_gucu": araba.motorGucu,
         "cekis": araba.cekis,

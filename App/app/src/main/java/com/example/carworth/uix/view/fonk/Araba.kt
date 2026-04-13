@@ -26,7 +26,6 @@ data class Araba(
     val model: String,
     val yil: Int,
     val kilometre: Int,
-    val renk: String,
     val vitesTipi: String,
     val yakitTipi: String,
     val kasaTipi: String,
@@ -39,32 +38,5 @@ data class Araba(
     val degisen: Int,
     val tramer: Double
 )
-suspend fun getArabaFiyati(araba: Araba): Double? {
-    val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json()
-        }
-    }
-
-    return try {
-        val response = client.post("https://carworth-vhir.onrender.com/araba") {
-            contentType(ContentType.Application.Json)
-            setBody(araba)
-        }
-
-        if (!response.status.isSuccess()) return null
-
-        val jsonString = response.bodyAsText()
-        val jsonElement = Json.parseToJsonElement(jsonString)
-        jsonElement.jsonObject["fiyat"]?.jsonPrimitive?.doubleOrNull
-
-    } catch (e: Exception) {
-        println("Hata: ${e.message}")
-        null
-    } finally {
-        client.close()
-    }
-}
-
 
 

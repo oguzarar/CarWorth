@@ -1,5 +1,6 @@
 package com.example.carworth.uix.view
 
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -56,7 +57,6 @@ fun SoruSayfalari(navController: NavController){
     val secilenVitesTipi=remember{mutableStateOf("")}
     val secilenYakitTipi=remember{mutableStateOf("")}
     val secilenKasaTipi=remember{mutableStateOf("")}
-    val secilenrenk=remember{mutableStateOf("")}
     val girilenMotorHacmi=remember{mutableStateOf(0.0)}
     val girilenMotorGucu=remember{mutableStateOf(0.0)}
     val secilenCekis=remember{mutableStateOf("")}
@@ -130,8 +130,7 @@ fun SoruSayfalari(navController: NavController){
                                                         Toast.LENGTH_SHORT).show()
                                                 }
                                                  })
-                                        Dropdowns("Renk","Renk Seçiniz",Listeler().renk, onItemSelected = {secilen->secilenrenk.value=secilen})
-                                        girdiKontrol.value=secilenYil.value!=0 && secilenrenk.value.isNotEmpty() && girilenKM.value>-1
+                                        girdiKontrol.value=secilenYil.value!=0 && girilenKM.value>-1
                                     }
                                     3-> {
                                         Dropdowns("Vites Tipi","Vites Tipi Seçiniz",Listeler().vites_tipi, onItemSelected = {secilen->secilenVitesTipi.value=secilen})
@@ -180,7 +179,6 @@ fun SoruSayfalari(navController: NavController){
                                             secilenModel.value,
                                             secilenYil.value,
                                             girilenKM.value,
-                                            secilenrenk.value,
                                             secilenVitesTipi.value,
                                             secilenYakitTipi.value,
                                             secilenKasaTipi.value,
@@ -193,7 +191,8 @@ fun SoruSayfalari(navController: NavController){
                                             secilenDegisen.value,
                                             girilenTramer.value)
                                         val arabaJson= Gson().toJson(araba)
-                                        navController.navigate("sonucsayfasi/$arabaJson")
+                                        val encodedJson = Uri.encode(arabaJson)
+                                        navController.navigate("sonucsayfasi/$encodedJson")
 
                                     }
                                 }

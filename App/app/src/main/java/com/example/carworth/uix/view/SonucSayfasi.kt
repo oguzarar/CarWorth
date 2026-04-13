@@ -27,24 +27,24 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.carworth.R
 import com.example.carworth.ui.theme.MainColor
 import com.example.carworth.ui.theme.backgroundColor
 import com.example.carworth.uix.view.fonk.Araba
 import com.example.carworth.uix.view.fonk.VSpacers
-import com.example.carworth.uix.view.fonk.getArabaFiyati
+import com.example.halisaham.uix.utils.Resource
 import java.text.NumberFormat
 import java.util.Locale
 
 
 @Composable
-fun SonucSayfasi(navController: NavController,araba: Araba) {
+fun SonucSayfasi(navController: NavController,araba: Araba,viewmodel: Viewmodel = hiltViewModel()) {
     val fiyat = remember { mutableStateOf("") }
-    val loading = remember { mutableStateOf(true) }
+    val price = viewmodel.price.value
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -53,7 +53,10 @@ fun SonucSayfasi(navController: NavController,araba: Araba) {
                 .background(color = backgroundColor),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box() {
+            LaunchedEffect(key1 = araba) {
+                viewmodel.getPrice(araba)
+            }
+            Box {
                 Image(
                     painter = painterResource(R.drawable.vector),
                     contentDescription = "",
@@ -95,21 +98,22 @@ fun SonucSayfasi(navController: NavController,araba: Araba) {
                                         fontWeight = FontWeight.Bold,
                                         color = Color.Black))
                                 VSpacers(18)
-                                LaunchedEffect(araba) {
-                                    loading.value = true
-                                    val price = getArabaFiyati(araba)
-                                    fiyat.value = price?.let { "$it" } ?: "Hata"
-                                    loading.value = false
+                                when(price){
+                                    is Resource.Loading -> {
+                                        CircularProgressIndicator(color = Color(0xFF1F8CF9))
+                                    }
+                                    is Resource.Succes -> {
+                                        val sonuc = NumberFormat.getNumberInstance(Locale("tr", "TR"))
+                                            .format((fiyat.value.toDouble()).toInt())
+                                        Text("$sonuc TL", fontSize = 25.sp)
+                                    }
+                                    is Resource.Error -> {
+                                        Text(
+                                            text = price.message,
+                                            color = Color.Red
+                                        )
+                                    }
                                 }
-                                if (loading.value) {
-                                    CircularProgressIndicator()
-                                } else {
-                                    val sonuc = NumberFormat.getNumberInstance(Locale("tr", "TR"))
-                                        .format((fiyat.value.toDouble()).toInt())
-                                    Text("$sonuc TL" ?: "Hata oluştu!", fontSize = 25.sp)
-                                }
-
-
 
                             }
                             Button(
