@@ -1,5 +1,6 @@
 package com.example.carworth.uix.view
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -43,7 +44,6 @@ import java.util.Locale
 
 @Composable
 fun SonucSayfasi(navController: NavController,araba: Araba,viewmodel: Viewmodel = hiltViewModel()) {
-    val fiyat = remember { mutableStateOf("") }
     val price = viewmodel.price.value
     Scaffold { paddingValues ->
         Column(
@@ -104,10 +104,11 @@ fun SonucSayfasi(navController: NavController,araba: Araba,viewmodel: Viewmodel 
                                     }
                                     is Resource.Succes -> {
                                         val sonuc = NumberFormat.getNumberInstance(Locale("tr", "TR"))
-                                            .format((fiyat.value.toDouble()).toInt())
+                                            .format(price.data.toInt())
                                         Text("$sonuc TL", fontSize = 25.sp)
                                     }
                                     is Resource.Error -> {
+                                        Log.e("price",price.toString())
                                         Text(
                                             text = price.message,
                                             color = Color.Red
