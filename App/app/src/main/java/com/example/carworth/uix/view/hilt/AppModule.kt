@@ -1,7 +1,8 @@
-package com.example.portfoy.hilt
+package com.example.carworth.uix.view.hilt
 
-import com.example.halisaham.data.retrofit.ApiUtils
-import com.example.halisaham.data.retrofit.ArabaDao
+
+import com.example.carworth.uix.view.data.retrofit.ApiUtils
+import com.example.carworth.uix.view.data.retrofit.ArabaDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +16,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providesCoinDao(): ArabaDao{
+    fun providesCoinDao(): ArabaDao {
         return ApiUtils.getPrice()
     }
 }

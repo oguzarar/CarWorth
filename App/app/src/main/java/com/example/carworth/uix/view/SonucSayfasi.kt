@@ -34,9 +34,9 @@ import androidx.navigation.NavController
 import com.example.carworth.R
 import com.example.carworth.ui.theme.MainColor
 import com.example.carworth.ui.theme.backgroundColor
+import com.example.carworth.uix.view.data.retrofit.Resource
 import com.example.carworth.uix.view.fonk.Araba
 import com.example.carworth.uix.view.fonk.VSpacers
-import com.example.halisaham.uix.utils.Resource
 import java.text.NumberFormat
 import java.util.Locale
 

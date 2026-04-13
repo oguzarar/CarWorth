@@ -34,7 +34,7 @@ data class Araba(
     val cekis: String,
     val ortYakit: Double,
     val yakitDeposu: Double,
-    val boya: Int,
+    val boyali: Int,
     val degisen: Int,
     val tramer: Double
 )

@@ -1,4 +1,4 @@
-package com.example.halisaham.uix.utils
+package com.example.carworth.uix.view.data.retrofit
 
 sealed class Resource<out T> {
     data class Succes<out T>(val data:T): Resource<T>()

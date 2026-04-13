@@ -1,8 +1,6 @@
 package com.example.carworth.uix.view.data.retrofit
 
 import com.example.carworth.uix.view.fonk.Araba
-import com.example.halisaham.data.retrofit.ArabaDao
-import com.example.halisaham.uix.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -53,7 +53,7 @@ async def araba_ekle(araba: Araba):
         "yakit_deposu": araba.yakitDeposu,
         "tramer": araba.tramer,
         "degisen": araba.degisen,
-        "boya": araba.boya
+        "boyali": araba.boya
     }])
 
     sonuc = model.predict(data)

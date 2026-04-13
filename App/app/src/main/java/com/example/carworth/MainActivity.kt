@@ -14,7 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.carworth.ui.theme.CarWorthTheme
 import com.example.carworth.uix.view.SayfaGecisi
 import com.example.carworth.uix.view.SoruSayfalari
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
