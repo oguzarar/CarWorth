@@ -12,6 +12,5 @@ Bu proje, Kotlin Jetpack Compose ile geliştirilmiş bir mobil uygulama ve Pytho
 <p float="left">
   <img src="Images/Anasayfa.jpg" alt="Resim 1" width="200"/>
   <img src="Images/SoruSayfasi.jpg" alt="Resim 2" width="200"/>
-  <img src="Images/Tahmin.jpg" alt="Resim 3" width="200"/>
   
 
